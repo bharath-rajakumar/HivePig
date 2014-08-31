@@ -1,0 +1,10 @@
+drop movies_2009;
+drop movies_2010;
+drop movies_2011;
+
+CREATE TABLE movies_2009 (movieid string, moviename string, genre string);
+CREATE TABLE movies_2010 (movieid string, moviename string, genre string);
+CREATE TABLE movies_2011 (movieid string, moviename string, genre string);
+
+
+FROM movies_part mp INSERT OVERWRITE TABLE movies_2009 SELECT mp.movieid,mp.moviename,mp.genre  WHERE mp.year = 2009 INSERT OVERWRITE TABLE movies_2010 SELECT mp.movieid,mp.moviename,mp.genre WHERE mp.year = 2010 INSERT OVERWRITE TABLE movies_2011 SELECT mp.movieid,mp.moviename,mp.genre WHERE mp.year = 2011;

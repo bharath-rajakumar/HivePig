@@ -1,0 +1,8 @@
+drop movies_part
+CREATE TABLE movies_part (movieid string, moviename string, genre string) PARTITIONED BY (Year INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/partition/2009" INTO TABLE movies_part PARTITION (Year = 2009);  
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/partition/2010" INTO TABLE movies_part PARTITION (Year = 2010);     
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/partition/2011" INTO TABLE movies_part PARTITION (Year = 2011);   
+
+SELECT * FROM movies_part where year=2009;  

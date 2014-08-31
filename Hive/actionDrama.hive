@@ -1,0 +1,13 @@
+drop table movies;
+drop table ratings;
+drop table users;
+
+CREATE TABLE movies (movieid string, moviename string, genre string) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+CREATE TABLE ratings (userid string,movieid string,rating float,time_stamp timestamp) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+CREATE TABLE users (userid string, gender string, age int, occ string,zipcode string) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/movies_new" INTO TABLE movies;
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/ratings_new" INTO TABLE ratings;
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/users_new" INTO TABLE users;
+
+Select /*+ MAPJOIN(t) */ m.movieid, m.moviename, m.genre, t.avg from (Select /*+ MAPJOIN(users) */ r.movieid as movieid, avg(r.rating) as avg from users u join ratings r on u.userid = r.userid where u.gender = "M" group by r.movieid having (avg >=4.4 and avg <=4.7)) t join movies m on t.movieid = m.movieid where m.genre like "%Action%" or m.genre like "%Drama%";

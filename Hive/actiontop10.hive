@@ -1,0 +1,10 @@
+drop table movies;
+drop table ratings;
+
+CREATE TABLE movies (movieid string, moviename string, genre string) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+CREATE TABLE ratings (userid string,movieid string,rating float,time_stamp timestamp) ROW FORMAT DELIMITED FIELDS TERMINATED BY "\;" LINES TERMINATED BY "\n";
+
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/movies_new" INTO TABLE movies;
+LOAD DATA LOCAL INPATH "/tmp/HW_3_Data/ratings_new" INTO TABLE ratings;
+
+Select /*+ MAPJOIN(movies) */ m.movieid, m.moviename, m.genre, avg(r.rating) as avg_rating from movies m join ratings r on m.movieid = r.movieid where m.genre like "%Action%"  group by m.movieid, m.moviename, m.genre order by avg_rating desc limit 10;
